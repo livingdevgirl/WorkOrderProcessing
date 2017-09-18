@@ -15,7 +15,7 @@ public class CreatorTest {
     public ExpectedException thrown = ExpectedException.none ();
 
     @Test
-    public void createWorkOrders () throws Exception {
+    public void createWorkOrder () throws Exception {
         thrown.expect(IOException.class);
 
     }

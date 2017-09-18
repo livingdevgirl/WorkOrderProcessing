@@ -1,76 +1,103 @@
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import sun.jvm.hotspot.utilities.ObjectReader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
 public class Processor {
-    public void processWorkOrders () {
+
+    Map<Status, Set<WorkOrder>> workOrderMap = new HashMap<> ();
+    Set<WorkOrder> workOrderSet = workOrderMap.get (Status.INITIAL);
+
+
+    public Map<Status, Set<WorkOrder>> getWorkOrderMap () {
+        return workOrderMap;
+    }
+
+
+    public void processWorkOrders () throws InterruptedException {
         try {
             moveIt ();
             readIt ();
-        } catch (InterruptedException e) {
-            e.printStackTrace ();
-        }
-        try {
-            Thread.sleep (5000l);
+            Thread.sleep (5000);
+            processWorkOrders ();
+
         } catch (InterruptedException e) {
             e.printStackTrace ();
         }
     }
 
-    List<WorkOrder> workOrdersList = new ArrayList<> ();
+    private void moveIt () {
 
 
-    private void moveIt () throws InterruptedException {
         // move work orders in map from one state to another
-        List<WorkOrder> in_progress = new ArrayList<> ();
+        Set<WorkOrder> workOrderSetInitial = workOrderMap.get (Status.INITIAL);
+        Set<WorkOrder> workOrderSetAssigned = workOrderMap.get (Status.ASSIGNED);
+        Set<WorkOrder> workOrderSetInProgress = workOrderMap.get (Status.IN_PROGRESS);
+        Set<WorkOrder> workOrderSetDone = workOrderMap.get (Status.DONE);
 
-        List<WorkOrder> assigned = new ArrayList<> ();
+        System.out.println (workOrderMap);
 
-        List<WorkOrder> completed = new ArrayList<> ();
-//IS FOR LOOP OR STREAMS HERE?
-
-        //LAMBDAS!
-
-
-    }
+        workOrderMap.put (Status.INITIAL, new HashSet<> ());
+        workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
+        workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
+        workOrderMap.put (Status.DONE, new HashSet<> ());
 
 
+                workOrderMap.put (Status.ASSIGNED, workOrderSetAssigned);
 
-    private void readIt () {
+                workOrderMap.put (Status.IN_PROGRESS, workOrderSetInProgress);
+                workOrderMap.put (Status.DONE, workOrderSetDone);
+
+
+         //print the map
+        System.out.println (workOrderMap);}
+
+
+    protected void readIt () {
         // read the json files into WorkOrders and put in map
-        File currentDirectory = new File(".");
-        File files[] = currentDirectory.listFiles();
+        File currentDirectory = new File (".");
+        File files[] = currentDirectory.listFiles ();
         for (File f : files) {
-            if (f.getName().endsWith(".json")) {
+            if (f.getName ().endsWith (".json")) {
                 // f is a reference to a json file
-                ObjectMapper mapper = new ObjectMapper ();
-                try{
-                    WorkOrder workOrder = mapper.readValue(new File(f.getName()), WorkOrder.class);
-                    workOrder.setStatus (Status.INITIAL);
-                } catch (JsonParseException e) {
-                    e.printStackTrace ();
-                } catch (JsonMappingException e) {
-                    e.printStackTrace ();
+
+
+                    ObjectMapper mapper = new ObjectMapper ();
+                try {
+                    WorkOrder nOrder = mapper.readValue (new File (f.getName ()), WorkOrder.class);
+                    nOrder.setStatus (Status.INITIAL);
+                    if (nOrder.getStatus () == Status.INITIAL) {
+                        System.out.println (nOrder + String.valueOf (nOrder.getContents ()));
+                        workOrderSet.add (nOrder);
+                    }
+
+
+                    workOrderMap.put (Status.INITIAL, workOrderSet);
+                    f.delete ();
+                    System.out.println (workOrderMap);
+
+
                 } catch (IOException e) {
                     e.printStackTrace ();
                 }
-                // f.delete(); will delete the file
+
+                //will delete the file
             }
         }
     }
 
-    public static void main (String args[]) {
+    public static void main (String[] args) throws InterruptedException {
         Processor processor = new Processor ();
         processor.processWorkOrders ();
+        try {
+            processor.processWorkOrders ();
+        } catch (InterruptedException e) {
+            e.printStackTrace ();
+        }
     }
 }
+
 
 
 //    The processWorkOrders method should

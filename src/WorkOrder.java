@@ -8,7 +8,7 @@ public class WorkOrder {
 
 
 
-    Random id = new Random();
+    protected Random id = new Random();
     protected Status status; //default value INITIAL
     private String title; //name
     private String contents; // details of work order
@@ -19,10 +19,6 @@ public class WorkOrder {
     }
 
 
-    public static void populate(){
-        List<WorkOrder> orders = new ArrayList<> ();
-        WorkOrder order= new WorkOrder();
-    }
     public Random getId () {
         return id;
     }
@@ -31,7 +27,7 @@ public class WorkOrder {
         this.status = status;
     }
 
-    public void setId (Random id) {
+    public void setId () {
         this.id = id;
     }
 
