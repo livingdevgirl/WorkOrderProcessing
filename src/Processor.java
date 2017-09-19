@@ -38,14 +38,8 @@ public class Processor {
 
         System.out.println (workOrderMap);
 
-        workOrderMap.put (Status.INITIAL, new HashSet<> ());
-        workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
-        workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
-        workOrderMap.put (Status.DONE, new HashSet<> ());
-
 
                 workOrderMap.put (Status.ASSIGNED, workOrderSetAssigned);
-
                 workOrderMap.put (Status.IN_PROGRESS, workOrderSetInProgress);
                 workOrderMap.put (Status.DONE, workOrderSetDone);
 
@@ -90,6 +84,11 @@ public class Processor {
     public static void main (String[] args) throws InterruptedException {
         Processor processor = new Processor ();
         processor.processWorkOrders ();
+
+        processor.workOrderMap.put (Status.INITIAL, new HashSet<> ());
+        processor.workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
+        processor.workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
+        processor.workOrderMap.put (Status.DONE, new HashSet<> ());
         try {
             processor.processWorkOrders ();
         } catch (InterruptedException e) {

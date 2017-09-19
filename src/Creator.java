@@ -49,7 +49,6 @@ public class Creator {
             try{
                 while(true){
                     creator.createWorkOrders();
-
                     Thread.sleep(5000);
                 }
             }catch (InterruptedException e){
