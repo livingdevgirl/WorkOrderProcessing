@@ -38,6 +38,19 @@ public class Processor {
 
         System.out.println (workOrderMap);
 
+        //initialize
+//        Iterator iterator = workOrderSetAssigned.iterator();
+//        while(iterator.hasNext()) {
+//            Map.Entry me = (Map.Entry)iterator.next();
+//            System.out.print("Key is: "+ me.getKey() +
+//                    "& Value is: "+me.getValue()+"\n");
+//        }
+
+        //Default value hashmap
+        workOrderMap.put (Status.INITIAL, new HashSet<> ());
+        workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
+        workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
+        workOrderMap.put (Status.DONE, new HashSet<> ());
 
                 workOrderMap.put (Status.ASSIGNED, workOrderSetAssigned);
                 workOrderMap.put (Status.IN_PROGRESS, workOrderSetInProgress);
@@ -68,6 +81,8 @@ public class Processor {
 
 
                     workOrderMap.put (Status.INITIAL, workOrderSet);
+
+                    //delete the file
                     f.delete ();
                     System.out.println (workOrderMap);
 
@@ -84,11 +99,6 @@ public class Processor {
     public static void main (String[] args) throws InterruptedException {
         Processor processor = new Processor ();
         processor.processWorkOrders ();
-
-        processor.workOrderMap.put (Status.INITIAL, new HashSet<> ());
-        processor.workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
-        processor.workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
-        processor.workOrderMap.put (Status.DONE, new HashSet<> ());
         try {
             processor.processWorkOrders ();
         } catch (InterruptedException e) {
