@@ -80,7 +80,7 @@ public class Processor {
                     }
 
 
-                    workOrderMap.put (Status.INITIAL, workOrderSet);
+                    putWorkOrderInMap (Status.INITIAL, nOrder);
 
                     //delete the file
                     f.delete ();
@@ -104,6 +104,12 @@ public class Processor {
         } catch (InterruptedException e) {
             e.printStackTrace ();
         }
+    }
+
+    private void putWorkOrderInMap(Status status, WorkOrder workOrder) {
+        Set<WorkOrder> workOrderSet = workOrderMap.get(status);
+        workOrderSet.add(workOrder);
+        workOrderMap.put(status, workOrderSet);
     }
 }
 
