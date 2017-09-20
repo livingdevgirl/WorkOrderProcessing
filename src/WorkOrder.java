@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -8,7 +6,7 @@ public class WorkOrder {
 
 
 
-    protected Random id = new Random();
+    protected long id = new Random().nextLong();
     protected Status status; //default value INITIAL
     private String title; //name
     private String contents; // details of work order
@@ -19,7 +17,7 @@ public class WorkOrder {
     }
 
 
-    public Random getId () {
+    public long getId () {
         return id;
     }
 

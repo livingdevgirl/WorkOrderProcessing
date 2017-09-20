@@ -41,12 +41,16 @@ public class Creator {
             //ObjectMapper to write json file
             ObjectMapper mapper = new ObjectMapper(){};
             File workOrderFile = new File(newWorkOrder.getId () + ".json");
-            String json = mapper.writeValueAsString ("workOrder Ticket Number " + newWorkOrder.getId ().toString () + newWorkOrder.getStatus () + newWorkOrder.getContents () + newWorkOrder.getTitle ());
+            String json = mapper.writeValueAsString ("workOrder Ticket Number " + newWorkOrder.getId () + newWorkOrder.getStatus () + newWorkOrder.getContents () + newWorkOrder.getTitle ());
             System.out.println (newWorkOrder.status + " " + "Work Created By " + newWorkOrder.getTitle () + " " + "Contents" + " " + newWorkOrder.getContents ());
 
-            mapper.writeValue(workOrderFile, json);
-            System.out.println ("the following work order has been created"  + " " + newWorkOrder.getId ());
+            mapper.writeValue(workOrderFile, newWorkOrder);
+            System.out.println ("the following work order has been created"  + " " + workOrderFile);
             workOrdersList.add(newWorkOrder);
+
+//                Processor processor = new Processor ();
+//                processor.putWorkOrderInMap (Status.INITIAL, newWorkOrder);
+
 
             } catch (IOException e) {
             e.printStackTrace ();
@@ -58,6 +62,8 @@ public class Creator {
             try{
                 while(true){
                     creator.createWorkOrders();
+                    Processor processor = new Processor ();
+                    processor.readIt ();
                     Thread.sleep(5000);
                 }
             }catch (InterruptedException e){
