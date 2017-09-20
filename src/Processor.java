@@ -9,6 +9,10 @@ public class Processor {
     Map<Status, Set<WorkOrder>> workOrderMap = new HashMap<> ();
     Set<WorkOrder> workOrderSet = workOrderMap.get (Status.INITIAL);
 
+    public Stack workOrderStack() {
+        return new Stack ();
+        
+    };
 
     public Map<Status, Set<WorkOrder>> getWorkOrderMap () {
         return workOrderMap;
@@ -30,6 +34,9 @@ public class Processor {
     }
 
     private void moveIt () {
+        File currentDirectory = new File ("../");
+
+        File files[] = currentDirectory.listFiles ();
 
 
         // move work orders in map from one state to another
@@ -83,10 +90,8 @@ public class Processor {
                         putWorkOrderInMap (status, readFile);
                         workOrderSet.add (readFile);
 
-
-
-
-                    System.out.println (workOrderMap);
+//
+//                    System.out.println (workOrderMap);
 
 
 
@@ -110,8 +115,8 @@ public class Processor {
         }
     }
 
-    public void putWorkOrderInMap () {
-        putWorkOrderInMap ();
+    public void putWorkOrderOnStack () {
+
     }
 
     public void putWorkOrderInMap(Status status, WorkOrder workOrder) {
