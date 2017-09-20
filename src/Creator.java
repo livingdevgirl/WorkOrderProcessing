@@ -63,7 +63,7 @@ public class Creator {
                 while(true){
                     creator.createWorkOrders();
                     Processor processor = new Processor ();
-                    processor.readIt ();
+                    processor.processWorkOrders ();
                     Thread.sleep(5000);
                 }
             }catch (InterruptedException e){
