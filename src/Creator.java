@@ -48,8 +48,6 @@ public class Creator {
             System.out.println ("the following work order has been created"  + " " + workOrderFile);
             workOrdersList.add(newWorkOrder);
 
-//                Processor processor = new Processor ();
-//                processor.putWorkOrderInMap (Status.INITIAL, newWorkOrder);
 
 
             } catch (IOException e) {
@@ -59,16 +57,16 @@ public class Creator {
 
     public static void main(String args[]) throws IOException {
         Creator creator = new Creator();
-            try{
-                while(true){
-                    creator.createWorkOrders();
-                    Processor processor = new Processor ();
-                    processor.processWorkOrders ();
-                    Thread.sleep(5000);
-                }
-            }catch (InterruptedException e){
-                e.printStackTrace ();
+        try{
+            while(true){
+                creator.createWorkOrders();
+                Thread.sleep(5000);
+
             }
+        }catch (InterruptedException e){
+            e.printStackTrace ();
+        }
+
 
 
     }

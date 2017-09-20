@@ -9,10 +9,9 @@ public class Processor {
     Map<Status, Set<WorkOrder>> workOrderMap = new HashMap<> ();
     Set<WorkOrder> workOrderSet = workOrderMap.get (Status.INITIAL);
 
-    public Stack workOrderStack() {
-        return new Stack ();
-        
-    };
+    public Collection<Status> values () {
+        return null;
+    }
 
     public Map<Status, Set<WorkOrder>> getWorkOrderMap () {
         return workOrderMap;
@@ -21,8 +20,9 @@ public class Processor {
 
     public void processWorkOrders () throws InterruptedException {
         try {
-            moveIt ();
             readIt ();
+            moveIt ();
+
             Thread.sleep (5000);
             processWorkOrders ();
 
@@ -33,19 +33,34 @@ public class Processor {
         }
     }
 
+    public void initialWorkOrderMap(){
+        //Default value hashmap
+
+        workOrderMap.put (Status.INITIAL, new HashSet<> ());
+        workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
+        workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
+        workOrderMap.put (Status.DONE, new HashSet<> ());
+    }
+
     private void moveIt () {
-        File currentDirectory = new File ("../");
 
-        File files[] = currentDirectory.listFiles ();
-
+        File currentFile = new File(".");
+        File files[] = currentFile.listFiles();
 
         // move work orders in map from one state to another
-        Set<WorkOrder> workOrderSetInitial = workOrderMap.get (Status.DONE);
-        Set<WorkOrder> workOrderSetAssigned = workOrderMap.get (Status.INITIAL);
-        Set<WorkOrder> workOrderSetInProgress = workOrderMap.get (Status.ASSIGNED);
-        Set<WorkOrder> workOrderSetDone = workOrderMap.get (Status.IN_PROGRESS);
+        Set<WorkOrder> workOrderSetInitial = workOrderMap.get(Status.INITIAL);
+        Set<WorkOrder> workOrderSetAssigned = workOrderMap.get(Status.ASSIGNED);
+        Set<WorkOrder> workOrderSetInProgress = workOrderMap.get(Status.IN_PROGRESS);
+        Set<WorkOrder> workOrderSetDone = workOrderMap.get(Status.DONE);
+
+        //second state
+        workOrderMap.put (Status.ASSIGNED, workOrderSetInitial);
+        workOrderMap.put (Status.IN_PROGRESS, workOrderSetAssigned);
+        workOrderMap.put (Status.DONE, workOrderSetInProgress);
+        workOrderMap.put (Status.INITIAL, workOrderSetInitial);
+
         System.out.println (workOrderMap);
-        System.out.println (workOrderSetAssigned);
+        System.out.println ("init" + workOrderSetAssigned.size ());
 
         //initialize
 //        Iterator iterator = workOrderSetAssigned.iterator();
@@ -55,17 +70,10 @@ public class Processor {
 //                    "& Value is: "+me.getValue()+"\n");
 //        }
 
-        //Default value hashmap
 
-        workOrderMap.put (Status.INITIAL, new HashSet<> ());
-        workOrderMap.put (Status.ASSIGNED, new HashSet<> ());
-        workOrderMap.put (Status.IN_PROGRESS, new HashSet<> ());
-        workOrderMap.put (Status.DONE, new HashSet<> ());
 
-        workOrderMap.put (Status.ASSIGNED, workOrderSetAssigned);
-        workOrderMap.put (Status.IN_PROGRESS, workOrderSetInProgress);
-        workOrderMap.put (Status.DONE, workOrderSetDone);
-        System.out.println (getWorkOrderMap ());
+        System.out.println (workOrderSet);
+
 
 
          //print the map
@@ -74,24 +82,29 @@ public class Processor {
 
     protected void readIt () {
         // read the json files into WorkOrders and put in map
-        File currentDirectory = new File ("../");
+        File currentDirectory = new File (".");
         File files[] = currentDirectory.listFiles ();
         for (File f : files) {
             if (f.getName ().endsWith (".json")) {
                 // f is a reference to a json file
-
+                System.out.println (f.getName ());
 
                     ObjectMapper mapper = new ObjectMapper ();
                 try {
                     WorkOrder readFile = mapper.readValue (new File(f.getName ()), WorkOrder.class);
-                    String writeFile = mapper.writeValueAsString (readFile);
+//                    String writeFile = mapper.writeValueAsString (values ());
 
-                        Status status = readFile.getStatus ();
-                        putWorkOrderInMap (status, readFile);
-                        workOrderSet.add (readFile);
+                        Status thisstatus = readFile.getStatus ();
+                        putWorkOrderInMap (thisstatus, readFile);
 
-//
-//                    System.out.println (workOrderMap);
+
+
+
+
+                    f.delete();
+
+
+                        System.out.println (workOrderMap);
 
 
 
@@ -100,13 +113,14 @@ public class Processor {
                 }
 
                 //will delete the file
-                f.delete ();
+
             }
         }
     }
 
     public static void main (String[] args) throws InterruptedException {
         Processor processor = new Processor ();
+        processor.initialWorkOrderMap();
         processor.processWorkOrders ();
         try {
             processor.processWorkOrders ();
@@ -115,14 +129,12 @@ public class Processor {
         }
     }
 
-    public void putWorkOrderOnStack () {
-
-    }
 
     public void putWorkOrderInMap(Status status, WorkOrder workOrder) {
         Set<WorkOrder> workOrderSet = workOrderMap.get(status);
         workOrderSet.add(workOrder);
         workOrderMap.put(status, workOrderSet);
+
     }
 }
 
