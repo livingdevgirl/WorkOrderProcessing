@@ -60,7 +60,7 @@ public class Creator {
         try{
             while(true){
                 creator.createWorkOrders();
-                Thread.sleep(5000);
+                Thread.sleep(2000);
 
             }
         }catch (InterruptedException e){

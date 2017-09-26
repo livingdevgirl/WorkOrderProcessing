@@ -1,8 +1,11 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import java.util.LinkedList;
 
 public class Processor {
 
@@ -12,6 +15,8 @@ public class Processor {
     public Collection<Status> values () {
         return null;
     }
+
+    Deque workOrderDeque = new LinkedList<WorkOrder>();
 
     public Map<Status, Set<WorkOrder>> getWorkOrderMap () {
         return workOrderMap;
@@ -47,6 +52,7 @@ public class Processor {
         File currentFile = new File(".");
         File files[] = currentFile.listFiles();
 
+
         // move work orders in map from one state to another
         Set<WorkOrder> workOrderSetInitial = workOrderMap.get(Status.INITIAL);
         Set<WorkOrder> workOrderSetAssigned = workOrderMap.get(Status.ASSIGNED);
@@ -54,13 +60,20 @@ public class Processor {
         Set<WorkOrder> workOrderSetDone = workOrderMap.get(Status.DONE);
 
         //second state
+
+        System.out.println ("processing " + workOrderSetAssigned.size () + " work orders.");
+//        remove from initial and into assigned
         workOrderMap.put (Status.ASSIGNED, workOrderSetInitial);
+        workOrderSetInitial.removeAll (// STOPSHIP: 9/24/17 how to remove these items and just move them... if the key value is Status.INITIAL);
+        System.out.println (workOrderMap);
         workOrderMap.put (Status.IN_PROGRESS, workOrderSetAssigned);
+        System.out.println (workOrderMap);
         workOrderMap.put (Status.DONE, workOrderSetInProgress);
-        workOrderMap.put (Status.INITIAL, workOrderSetInitial);
+        workOrderMap.remove (Status.DONE, workOrderSetDone);
+
 
         System.out.println (workOrderMap);
-        System.out.println ("init" + workOrderSetAssigned.size ());
+
 
         //initialize
 //        Iterator iterator = workOrderSetAssigned.iterator();
@@ -133,6 +146,7 @@ public class Processor {
     public void putWorkOrderInMap(Status status, WorkOrder workOrder) {
         Set<WorkOrder> workOrderSet = workOrderMap.get(status);
         workOrderSet.add(workOrder);
+
         workOrderMap.put(status, workOrderSet);
 
     }

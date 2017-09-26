@@ -11,6 +11,13 @@ public class WorkOrder {
     private String title; //name
     private String contents; // details of work order
 
+    public int hashCode(){
+        return (int) id *
+                status.hashCode() *
+                title.hashCode() *
+                contents.hashCode ();
+    }
+
     WorkOrder(){
 
 
